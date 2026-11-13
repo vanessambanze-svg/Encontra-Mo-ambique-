@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087a4b">
+  <meta name="description" content="Encontra Moçambique — produtos, serviços, emprego, casas e oportunidades em todo o país.">
+  <title>Encontra Moçambique</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#" aria-label="Encontra Moçambique início"><span class="brand-mark">E</span><span>Encontra <b>Moçambique</b><small>O que procuras, mais perto.</small></span></a>
+  <nav><button id="loginOpen" class="button button-light">Entrar</button><button id="publishOpen" class="button">Publicar anúncio</button></nav>
+</header>
+<main>
+  <section class="hero">
+    <p class="eyebrow">UM PAÍS. MILHARES DE POSSIBILIDADES.</p>
+    <h1>Encontra o que precisas.<br><em>Em Moçambique.</em></h1>
+    <p class="hero-copy">Produtos, serviços, emprego, casas e oportunidades num só lugar.</p>
+    <form id="searchForm" class="search-panel">
+      <label class="sr-only" for="searchTerm">O que procuras?</label>
+      <input id="searchTerm" placeholder="O que procuras hoje?" autocomplete="off">
+      <select id="searchCategory" aria-label="Categoria">
+        <option value="">Todas as categorias</option>
+        <option>Produtos</option><option>Serviços</option><option>Empregos</option>
+        <option>Casas e terrenos</option><option>Formações</option><option>Oportunidades</option>
+      </select>
+      <select id="searchProvince" aria-label="Província">
+        <option value="">Todas as províncias</option>
+      </select>
+      <button class="button" type="submit">Pesquisar</button>
+    </form>
+    <div class="hero-note">Pesquisa gratuita · Sem conta para consultar · Anúncios revistos antes de aparecerem</div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading"><div><p class="eyebrow">EXPLORAR</p><h2>Encontra por categoria</h2></div></div>
+    <div class="category-grid" id="categoryGrid">
+      <button class="category" data-category="Produtos"><span>🛍️</span><b>Produtos</b><small>Compra e venda</small></button>
+      <button class="category" data-category="Serviços"><span>🧰</span><b>Serviços</b><small>Profissionais e empresas</small></button>
+      <button class="category" data-category="Empregos"><span>💼</span><b>Empregos</b><small>Vagas e oportunidades</small></button>
+      <button class="category" data-category="Casas e terrenos"><span>🏠</span><b>Casas e terrenos</b><small>Arrendar, comprar ou vender</small></button>
+      <button class="category" data-category="Formações"><span>📚</span><b>Formações</b><small>Cursos e aprendizagem</small></button>
+      <button class="category" data-category="Oportunidades"><span>🌱</span><b>Oportunidades</b><small>Projectos e negócios</small></button>
+    </div>
+  </section>
+
+  <section class="section listings-section">
+    <div class="section-heading"><div><p class="eyebrow">PUBLICAÇÕES APROVADAS</p><h2>Anúncios recentes</h2><p class="muted">Só aparecem anúncios aprovados pela administração.</p></div><span id="resultCount" class="count">A carregar…</span></div>
+    <div id="listingGrid" class="listing-grid"><div class="empty">A carregar anúncios…</div></div>
+  </section>
+
+  <section class="cta">
+    <div><p class="eyebrow">TENS ALGO PARA ANUNCIAR?</p><h2>Chega a pessoas de todo o país.</h2><p>Publica gratuitamente e aguarda a revisão da equipa.</p></div>
+    <button id="publishOpen2" class="button button-white">Publicar gratuitamente</button>
+  </section>
+</main>
+<footer><b>Encontra Moçambique</b><span>Um espaço para aproximar pessoas, negócios e oportunidades.</span><small>© <span id="year"></span> Encontra Moçambique · Verifica sempre as informações antes de efectuar pagamentos.</small></footer>
+
+<div class="modal" id="authModal" aria-hidden="true"><div class="modal-card"><button class="close" data-close="authModal">×</button><p class="eyebrow">ÁREA DO ANUNCIANTE</p><h2 id="authTitle">Entrar na conta</h2>
+  <form id="authForm"><label>Email<input id="authEmail" type="email" required autocomplete="email"></label><label>Palavra-passe<input id="authPassword" type="password" required minlength="6" autocomplete="current-password"></label><button class="button full" id="authSubmit">Entrar</button></form>
+  <p class="switch-auth"><span id="authSwitchText">Ainda não tens conta?</span> <button id="authSwitch" class="text-button">Criar conta</button></p><p id="authMessage" class="message" aria-live="polite"></p>
+</div></div>
+
+<div class="modal" id="publishModal" aria-hidden="true"><div class="modal-card wide"><button class="close" data-close="publishModal">×</button><p class="eyebrow">NOVO ANÚNCIO</p><h2>Publicar anúncio</h2><p class="muted">O anúncio será analisado pela administração. Depois de aprovado, ficará disponível durante 15 dias.</p>
+  <form id="listingForm" class="form-grid">
+    <label class="span2">Título do anúncio<input id="title" maxlength="100" required placeholder="Ex.: Sofá de 3 lugares em bom estado"></label>
+    <label>Categoria<select id="category" required><option value="">Seleccionar</option><option>Produtos</option><option>Serviços</option><option>Empregos</option><option>Casas e terrenos</option><option>Formações</option><option>Oportunidades</option></select></label>
+    <label>Preço (MT)<input id="price" type="number" min="0" step="0.01" placeholder="Opcional"></label>
+    <label>Província<select id="province" required></select></label>
+    <label>Distrito / Município<input id="district" required maxlength="80" placeholder="Ex.: Maxixe"></label>
+    <label class="span2">Descrição<textarea id="description" rows="4" maxlength="1500" required placeholder="Descreve o produto, serviço ou oportunidade…"></textarea></label>
+    <label>WhatsApp (com indicativo)<input id="whatsapp" required placeholder="Ex.: 258841234567" inputmode="tel"></label>
+    <div class="span2"><button class="button full" type="submit" id="submitListing">Enviar para aprovação</button><p id="listingMessage" class="message" aria-live="polite"></p></div>
+  </form>
+</div></div>
+
+<div class="modal" id="adminModal" aria-hidden="true"><div class="modal-card wide"><button class="close" data-close="adminModal">×</button><p class="eyebrow">PAINEL DE CONTROLO</p><h2>Revisão de anúncios</h2><div id="adminList">A carregar…</div></div></div>
+<div id="toast" class="toast" role="status"></div>
+</body></html>
